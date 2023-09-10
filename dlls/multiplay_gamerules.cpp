@@ -31,6 +31,7 @@
 #include	"voice_gamemgr.h"
 #endif
 #include	"hltv.h"
+#include	"shake.h"
 
 extern DLL_GLOBAL CGameRules *g_pGameRules;
 extern DLL_GLOBAL BOOL	g_fGameOver;
@@ -727,6 +728,23 @@ void CHalfLifeMultiplay::PlayerKilled( CBasePlayer *pVictim, entvars_t *pKiller,
 		pKiller->frags += IPointsForKill( peKiller, pVictim );
 
 		FireTargets( "game_playerkill", ktmp, ktmp, USE_TOGGLE, 0 );
+
+		if ( bm_fade_victim.value )
+		{
+			char color[3];
+			int a = UTIL_axtoi(strncpy( color, bm_fade_victim_color.string + 6, 2 ));
+
+			if( a )
+			{
+				int r = UTIL_axtoi( strncpy( color, bm_fade_victim_color.string, 2 ) );
+				int g = UTIL_axtoi( strncpy( color, bm_fade_victim_color.string + 2, 2 ) );
+				int b = UTIL_axtoi( strncpy( color, bm_fade_victim_color.string + 4, 2 ) );
+				UTIL_ScreenFade( ktmp, Vector( r, g, b ), 0.3, 0.3, a, FFADE_IN );
+			}
+		}
+
+		if ( bm_victim_sound.value )
+			CLIENT_COMMAND( ENT( pKiller), "play %s\n", bm_victim_sound_path.string );
 	}
 	else
 	{

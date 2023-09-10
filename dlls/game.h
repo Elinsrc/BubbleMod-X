@@ -145,6 +145,11 @@ extern cvar_t	bm_rune_armor_r;
 extern cvar_t	bm_rune_shotty;
 extern cvar_t	bm_rune_shotty_t;
 extern cvar_t	bm_rune_shotty_r;
+
+extern cvar_t   bm_fade_victim;
+extern cvar_t   bm_fade_victim_color;
+extern cvar_t   bm_victim_sound;
+extern cvar_t   bm_victim_sound_path;
 // BMOD End - CVARs
 
 // BMOD Begin - server commands

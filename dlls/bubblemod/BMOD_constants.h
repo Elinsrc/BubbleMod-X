@@ -42,7 +42,7 @@
 #define BMOD_BRANCH_NAME	"Custom Bubblemod"
 
 // The version of your branch
-#define BMOD_BRANCH_VERSION	"2.2.3"
+#define BMOD_BRANCH_VERSION	"0.1"
 
 // The URL of the website describing your branch
 #define BMOD_BRANCH_URL		"http://www.bubblemod.org"

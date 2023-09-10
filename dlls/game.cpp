@@ -555,6 +555,11 @@ cvar_t  bm_rune_armor_r = { "bm_rune_armor_r", "60" };
 cvar_t  bm_rune_shotty = { "bm_rune_shotty", "1", FCVAR_SERVER };
 cvar_t  bm_rune_shotty_t = { "bm_rune_shotty_t", "30" };
 cvar_t  bm_rune_shotty_r = { "bm_rune_shotty_r", "180" };
+
+cvar_t  bm_fade_victim = { "bm_fade_victim", "1", FCVAR_SERVER };
+cvar_t  bm_fade_victim_color = { "bm_fade_victim_color", "22FF00A0", FCVAR_SERVER };
+cvar_t  bm_victim_sound = { "bm_victim_sound", "1", FCVAR_SERVER };
+cvar_t  bm_victim_sound_path = { "bm_victim_sound_path", "buttons/bell1.wav", FCVAR_SERVER };
 // BMOD End - CVARs
 
 // Register your console variables here
@@ -1074,6 +1079,11 @@ void GameDLLInit( void )
 	CVAR_REGISTER( &bm_rune_shotty );
 	CVAR_REGISTER( &bm_rune_shotty_t );
 	CVAR_REGISTER( &bm_rune_shotty_r );
+
+	CVAR_REGISTER( &bm_fade_victim );
+	CVAR_REGISTER( &bm_fade_victim_color );
+	CVAR_REGISTER( &bm_victim_sound );
+	CVAR_REGISTER( &bm_victim_sound_path );
 	// BMOD End - CVARs
 
 	// BMOD Begin - Server commands
