@@ -505,7 +505,7 @@ int CBasePlayer::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 	{
 		if( pAttacker == this )
 		{
-			sprintf( DefenderText, "You!\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
+			sprintf( DefenderText, "You !\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
 			PrintClientMessage( pev, BMOD_CHAN_DEFENDER, Vector(255, 0 ,0), Vector(0,3,0), DefenderText );
 		}
 		else if( pAttacker->IsPlayer() )
@@ -517,7 +517,7 @@ int CBasePlayer::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 		}
 		else
 		{
-			sprintf( DefenderText, "You!\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
+			sprintf( DefenderText, "You !\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
 			PrintClientMessage( pev, BMOD_CHAN_DEFENDER, Vector(255, 0 ,0), Vector(0,3,0), DefenderText );
 		}
 	}

@@ -49,6 +49,7 @@ extern void CopyToBodyQue( entvars_t* pev );
 extern int giPrecacheGrunt;
 extern int gmsgSayText;
 extern int gmsgBhopcap;
+extern int gmsgScoreInfo;
 
 extern cvar_t allow_spectators;
 extern cvar_t multibyte_only;
@@ -95,6 +96,17 @@ called when a player connects to a server
 */
 BOOL ClientConnect( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128] )
 {
+	char text[256] = "";
+	if( pEntity->v.netname )
+	{
+		_snprintf( text, sizeof(text) - 1, "<SERVER> %s connects to the server\n", STRING( pEntity->v.netname ) );
+		text[sizeof(text) - 1] = '\0';
+	}
+	MESSAGE_BEGIN( MSG_ALL, gmsgSayText, NULL );
+		WRITE_BYTE( ENTINDEX( pEntity ) );
+		WRITE_STRING( text );
+	MESSAGE_END();
+
 	return g_pGameRules->ClientConnected( pEntity, pszName, pszAddress, szRejectReason );
 
 // a client connecting during an intermission can cause problems
@@ -119,7 +131,7 @@ void ClientDisconnect( edict_t *pEntity )
 	char text[256] = "";
 	if( pEntity->v.netname )
 	{
-		_snprintf( text, sizeof(text) - 1, "- %s has left the game\n", STRING( pEntity->v.netname ) );
+		_snprintf( text, sizeof(text) - 1, "<SERVER> %s has left the game\n", STRING( pEntity->v.netname ) );
 		text[sizeof(text) - 1] = '\0';
 	}
 	MESSAGE_BEGIN( MSG_ALL, gmsgSayText, NULL );
@@ -387,7 +399,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 		return;  // no character found, so say nothing
 
 	// turn on color set 2  (color on,  no sound)
-	if( player->IsObserver() && ( teamonly ) )
+	if( player->IsObserver() )
 		_snprintf( text, sizeof(text) - 1, "%c(SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
 	else if( teamonly )
 		_snprintf( text, sizeof(text) - 1, "%c(TEAM) %s: ", 2, STRING( pEntity->v.netname ) );
@@ -809,7 +821,7 @@ void ClientCommand( edict_t *pEntity )
 						( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
 			}
 			else
-				ClientPrint( pev, HUD_PRINTCONSOLE, "Spectator mode is disabled.\n" );
+				ClientPrint( pev, HUD_PRINTCENTER, "Spectator mode is disabled!\n" );
 		}
 		else
 		{
@@ -865,6 +877,35 @@ void ClientCommand( edict_t *pEntity )
 			else
 				ClientPrint( &pEntity->v, HUD_PRINTCONSOLE, "Leet-Speak disabled. (lamer!)\n" );
 		}
+	}
+	else if( FStrEq(pcmd, "resetscore") || FStrEq(pcmd, "rs") )
+	{
+		CBasePlayer *pPlayer = GetClassPtr( (CBasePlayer *)pev );
+
+		if( pPlayer->pev->frags == 0 && pPlayer->m_iDeaths == 0 )
+			return;
+
+		pPlayer->RemoveAllItems( TRUE );
+		pPlayer->pev->frags = 0; // pefrect zero
+		pPlayer->m_iDeaths = 0; // perfect zero
+
+		// update the scores
+		MESSAGE_BEGIN( MSG_ALL, gmsgScoreInfo );
+				WRITE_BYTE( ENTINDEX(pPlayer->edict()) );
+				WRITE_SHORT( (int)pPlayer->pev->frags );
+				WRITE_SHORT( pPlayer->m_iDeaths );
+				WRITE_SHORT( 0 );
+				WRITE_SHORT( 0 );
+		MESSAGE_END();
+
+		// player in spectator mode cannot respawn
+		if( !pPlayer->IsObserver() )
+		{
+			pPlayer->Spawn();
+			ClientPrint( pev, HUD_PRINTCENTER, "Your score has been reset!\n" );
+		}
+
+		return;
 	}
 	else
 	{

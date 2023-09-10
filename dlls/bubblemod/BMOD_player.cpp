@@ -263,6 +263,10 @@ void CBasePlayer::Observer_HandleButtons()
 //			g_engfuncs.pfnServerPrint( "Player spawned from Obs!\n" );
 			StopObserver();
 			m_fMsgTimer = gpGlobals->time + 0.2f;
+
+			// notify other clients of player left spectators
+			UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has left spectator mode\n",
+					( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
 		}		
 	}
 
