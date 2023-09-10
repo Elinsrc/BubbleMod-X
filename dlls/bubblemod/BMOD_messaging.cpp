@@ -79,22 +79,22 @@ void PrintMessage( CBaseEntity *pEnt, int iChannel, Vector vecColor, Vector vecT
 	switch (iChannel)
 	{
 	case BMOD_CHAN_INFO:
-		hText.x = 0.01; 
+		hText.x = 0.01;
 		hText.y = 0.1;
 		break;
 
 	case BMOD_CHAN_RUNE:
-		hText.x = -1; 
+		hText.x = -1;
 		hText.y = 1;
 		break;
 
 	case BMOD_CHAN_COUNTDOWN:
-		hText.x = -1; 
+		hText.x = -1;
 		hText.y = -1;
 		break;
 
 	case BMOD_CHAN_WEAPON:
-		hText.x = -1; 
+		hText.x = -1;
 		hText.y = 0.875;
 		break;
 	}
@@ -118,4 +118,44 @@ void PrintMessage( CBaseEntity *pEnt, int iChannel, Vector vecColor, Vector vecT
 	hText.fxTime = 0.5;     //Does nothing in this case
 
 	UTIL_HudMessage(pEnt, hText, szText);
+}
+
+void PrintClientMessage( entvars_t *client, int iChannel, Vector vecColor, Vector vecTime, const char *msg )
+{
+	char szText[256];
+	hudtextparms_t hText = {0};
+
+	sprintf(szText, "%s",msg);
+
+	switch (iChannel)
+	{
+		case BMOD_CHAN_DEFENDER:
+			hText.x = -1;
+			hText.y = 0.6;
+			break;
+
+		case BMOD_CHAN_ATTACKER:
+			hText.x = -1;
+			hText.y = -0.6;
+			break;
+	}
+
+	hText.a1 = 240; // Brightness
+	hText.a2 = 240;
+
+	hText.r1 = vecColor.x; // Color
+	hText.r2 = vecColor.x;
+	hText.g1 = vecColor.y;
+	hText.g2 = vecColor.y;
+	hText.b1 = vecColor.z;
+	hText.b2 = vecColor.z;
+
+	hText.channel = iChannel; // Channel
+
+	hText.fadeinTime = vecTime.x;
+	hText.fadeoutTime = vecTime.z;
+	hText.holdTime = vecTime.y;
+	hText.fxTime = 0,25;     //Does nothing in this case
+
+	UTIL_HudMessagePlayer(client, hText, szText);
 }

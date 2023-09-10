@@ -37,6 +37,7 @@
 #include "BMOD_rune.h"
 #include "pm_shared.h"
 #include "hltv.h"
+#include "BMOD_messaging.h"
 
 // #define DUCKFIX
 
@@ -499,29 +500,25 @@ int CBasePlayer::TakeDamage( entvars_t *pevInflictor, entvars_t *pevAttacker, fl
 
 	char AttackerText[128];
 	char DefenderText[128];
-	char HitGroup[128] = "";
-
-	if( m_LastHitGroup == HITGROUP_HEAD )
-		strcpy( HitGroup, "HEADSHOT!" );
 
 	if( bm_dmg_messages.value > 0 )
 	{
 		if( pAttacker == this )
 		{
-			sprintf( DefenderText, "Did %i/%i damage to yourself. %s\n", (int)flDamage, (int)flArmorDone, HitGroup );
-			ClientPrint( pev, HUD_PRINTNOTIFY, DefenderText );
+			sprintf( DefenderText, "You!\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
+			PrintClientMessage( pev, BMOD_CHAN_DEFENDER, Vector(255, 0 ,0), Vector(0,3,0), DefenderText );
 		}
 		else if( pAttacker->IsPlayer() )
 		{
-			sprintf( DefenderText, "Took %i/%i damage from %s. %s\n", (int)flDamage, (int)flArmorDone, STRING( pAttacker->pev->netname ), HitGroup );
-			sprintf( AttackerText, "Did %i/%i damage to %s. %s\n", (int)flDamage, (int)flArmorDone, STRING( pev->netname ), HitGroup );
-			ClientPrint( pev, HUD_PRINTNOTIFY, DefenderText );
-			ClientPrint( pAttacker->pev, HUD_PRINTNOTIFY, AttackerText );
+			sprintf( DefenderText, "%s\n( %i Damage / %i Armor )\n", STRING( pAttacker->pev->netname ), (int)flDamage, (int)flArmorDone );
+			sprintf( AttackerText, "%s\n( %i Damage / %i Armor )\n", STRING( pev->netname ), (int)flDamage, (int)flArmorDone );
+			PrintClientMessage( pev, BMOD_CHAN_DEFENDER, Vector(255, 0 ,0), Vector(0,3,0), DefenderText );
+			PrintClientMessage( pAttacker->pev, BMOD_CHAN_ATTACKER, Vector(0, 255 ,0), Vector(0,3,0), AttackerText );
 		}
 		else
 		{
-			sprintf( DefenderText, "Took %i/%i damage.\n", (int)flDamage, (int)flArmorDone );
-			ClientPrint( pev, HUD_PRINTNOTIFY, DefenderText );
+			sprintf( DefenderText, "You!\n( %i Damage / %i Armor )\n", (int)flDamage, (int)flArmorDone );
+			PrintClientMessage( pev, BMOD_CHAN_DEFENDER, Vector(255, 0 ,0), Vector(0,3,0), DefenderText );
 		}
 	}
 

@@ -37,8 +37,11 @@
 #define BMOD_CHAN_INFO		1
 #define BMOD_CHAN_RUNE		2
 #define BMOD_CHAN_COUNTDOWN	3
-#define BMOD_CHAN_WEAPON		4
+#define BMOD_CHAN_WEAPON	4
+#define BMOD_CHAN_DEFENDER	5
+#define BMOD_CHAN_ATTACKER	6
 
 void PrintMessage( CBaseEntity *pEnt, int iChannel, Vector vecColor, Vector vecTime, const char *msg);
+void PrintClientMessage( entvars_t *client, int iChannel, Vector vecColor, Vector vecTime, const char *msg );
 
 #endif
