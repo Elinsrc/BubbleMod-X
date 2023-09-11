@@ -63,6 +63,7 @@ set (SVDLL_SOURCES
 	bubblemod/BMOD_tripmines.cpp
 	bubblemod/BMOD_util.cpp
 	bubblemod/BMOD_zapgunrift.cpp
+	bubblemod/BMOD_timer.cpp
 	cbase.cpp
 	client.cpp
 	combat.cpp

@@ -144,6 +144,8 @@ void CHalfLifeTeamplay::Think( void )
 
 	last_frags = frags_remaining;
 	last_time = time_remaining;
+
+	m_Timer.Think();
 }
 
 //=========================================================

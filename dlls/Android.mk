@@ -54,6 +54,7 @@ LOCAL_SRC_FILES := agrunt.cpp airtank.cpp \
 	   bubblemod/BMOD_tripmines.cpp \
 	   bubblemod/BMOD_util.cpp \
 	   bubblemod/BMOD_zapgunrift.cpp \
+	   bubblemod/BMOD_timer.cpp \
            cbase.cpp \
            client.cpp \
            combat.cpp \

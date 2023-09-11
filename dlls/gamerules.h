@@ -20,6 +20,7 @@
 #define GAMERULES_H
 //#include "weapons.h"
 //#include "items.h"
+#include "BMOD_timer.h"
 class CBasePlayerItem;
 class CBasePlayer;
 class CItem;
@@ -168,6 +169,9 @@ public:
 	// BMOD Begin - Extra gamerules
 	virtual void BMOD_PreChangeLevel( void );
 	// BMOD End - Extra gamerules
+
+	// MiniAG Timer
+	BmodTimer	m_Timer;
 };
 
 extern CGameRules *InstallGameRules( void );

@@ -548,10 +548,9 @@ void Host_Say( edict_t *pEntity, int teamonly )
 	else if( !strcmp( p, "status" ) )
 	{
 		// g_pGameRules->BMOD_PreChangeLevel();
-		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> Timeleft: %i:%0.2i   Fragsleft: %i   Map: \"%s\"   Next: \"%s\"\n",
-			 (int)timeleft.value / 60, 
-			 (int)timeleft.value % 60,
+		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> Fragsleft: %i/%i   Map: \"%s\"   Next: \"%s\"\n",
 			 (int)fragsleft.value,
+			 (int)fraglimit.value,
 			 STRING( gpGlobals->mapname ), 
 			 CVAR_GET_STRING( "bm_nextmap" ) ) );
 	}
