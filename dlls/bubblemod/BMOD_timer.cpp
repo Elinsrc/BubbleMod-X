@@ -20,7 +20,7 @@ BmodTimer::~BmodTimer()
 
 void BmodTimer::Think()
 {
-    // The original code was written by Martin Webrant
+	// The original code was written by Martin Webrant
 
 	// Calculate effective time
 	m_fEffectiveTime += gpGlobals->time - m_fLastTimeCheck;

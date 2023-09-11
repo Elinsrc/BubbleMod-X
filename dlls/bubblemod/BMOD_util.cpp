@@ -34,7 +34,7 @@
 #include "weapons.h"
 #include "gamerules.h"
 #include <string.h>
-#include <time.h>
+#include <ctime>
 
 // bigguy's CastPlayer functions
 
@@ -472,31 +472,11 @@ void UTIL_Speak_2_l33t( char *szTarget, char *szOString )
 }
 
 void UTIL_SayTime( void ) {
-	//	 tm_sec:	seconds after the minute (0-59)
-	//	 tm_min:	minutes after hour (0-59)
-	//	 tm_hour:	hours after midnight (0-23)
-	//	 tm_mday:	day of month (1-31)
-	//	 tm_mon:	month of year (0-11; January == 0)
-	//	 tm_year:	year (value of current year minus 1900)
+	char time_str[80];
+	time_t date_time = time(0);
 
-	struct tm *adjustedTime;
-	time_t sysTime;
-
-	time( &sysTime );			// Get system time encoded as time_t
-	adjustedTime = localtime( &sysTime );	// Adjust for local time
-
-	char szTime[80];
-
-	int hour = adjustedTime->tm_hour;
-	hour = hour > 12 ? hour - 12 : hour;
-	hour = hour == 0 ? 12 : hour;
-	int min = adjustedTime->tm_min;
-	const char *ampm = "AM";
-	if (adjustedTime->tm_hour > 11)
-		ampm = "PM";
-
-	sprintf(szTime, "<SERVER> Local server time is: %d:%02d %s\n", hour, min, ampm);
-	UTIL_ClientPrintAll( HUD_PRINTTALK, szTime);
+	strftime(time_str, 80, "<SERVER> Local server time is: %T", localtime(&date_time));
+	UTIL_ClientPrintAll( HUD_PRINTTALK, time_str);
 }
 
 // Convert a four digit hex string to an int. 
