@@ -603,17 +603,17 @@ void CBasePlayer::BMOD_Identify( void )
 					szExtra
 					) );
 		else if ( g_pGameRules->PlayerRelationship( pOther, this ) == GR_TEAMMATE )
-				ClientPrint( pev, HUD_PRINTCENTER, UTIL_VarArgs ("-%s-\n%i / %i", 
-					STRING( pOtherPlayer->pev->netname ), 
-					(int)pOtherPlayer->pev->health, 
-					(int)pOtherPlayer->pev->armorvalue) 
+				ClientPrint( pev, HUD_PRINTCENTER, UTIL_VarArgs ("-%s-\n%i / %i",
+					STRING( pOtherPlayer->pev->netname ),
+					(int)pOtherPlayer->pev->health,
+					(int)pOtherPlayer->pev->armorvalue)
 					);
-		else
+		/*else
 				ClientPrint( pev, HUD_PRINTCENTER, UTIL_VarArgs ("-%s-\n(%s)%s", 
 					STRING( pOtherPlayer->pev->netname ),
 					g_engfuncs.pfnInfoKeyValue( g_engfuncs.pfnGetInfoKeyBuffer( pOtherPlayer->edict() ), "model" ),
 					szExtra
-					) );
+					) );*/
 
 		timer = gpGlobals->time + 0.5f;
 		LastIdentPlayer = (CBasePlayer *)pOther;

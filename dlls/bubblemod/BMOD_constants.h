@@ -39,18 +39,18 @@
 // server with no master server reporting.
 
 // Fill this in with the title of your bubblemod branch
-#define BMOD_BRANCH_NAME	"Custom Bubblemod"
+#define BMOD_BRANCH_NAME	"Bugfixed and updated Bubblemod"
 
 // The version of your branch
-#define BMOD_BRANCH_VERSION	"0.1"
+#define BMOD_BRANCH_VERSION	"0.1a"
 
 // The URL of the website describing your branch
-#define BMOD_BRANCH_URL		"http://www.bubblemod.org"
+#define BMOD_BRANCH_URL		"https://github.com/Elinsrc/BubbleMod-X"
 
 // End branch customizations
 // ---------------------------------------------------------------
 
-#define BMOD_VERSION			"2.2.3a"
+#define BMOD_VERSION			"0.1a"
 
 #if defined(_WIN32) && defined(_MSC_VER)
 #define BMOD_PLATFORM			"WIN32"

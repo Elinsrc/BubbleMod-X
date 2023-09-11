@@ -59,8 +59,9 @@ void PrintMessage( CBaseEntity *pEnt, int iChannel, Vector vecColor, Vector vecT
 
 		// BMOD_PreChangeLevel();
 
-		sprintf(szText, "BUBBLE MOD - http://www.bubblemod.org\n%s Version %s - %s-%s\n\nCurrent Map: %s\nNext Map: %s\nTime Left: %s\nFrags Left: %i/%i",
+		sprintf(szText, "BubbleMod-X\n%s\n%s\nVersion %s - %s %s\n\nCurrent Map: %s\nNext Map: %s\nTime Left: %s\nFrags Left: %i/%i",
 		BMOD_BRANCH_NAME,
+		BMOD_BRANCH_URL,
 		BMOD_BRANCH_VERSION,
 		BMOD_PLATFORM, 
 		BMOD_ARCH,

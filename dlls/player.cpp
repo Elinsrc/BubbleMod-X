@@ -947,7 +947,7 @@ void CBasePlayer::Killed( entvars_t *pevAttacker, int iGib )
 		GibMonster();	// This clears pev->model
 		pev->effects |= EF_NODRAW;
 
-		if( ( RANDOM_LONG( 0, 100 ) < 15 ) || ( m_LastHitGroup == HITGROUP_HEAD ) )
+		/*if( ( RANDOM_LONG( 0, 100 ) < 15 ) || ( m_LastHitGroup == HITGROUP_HEAD ) )
 		{
 			switch( RANDOM_LONG( 0, 6 ) )
 			{
@@ -973,7 +973,7 @@ void CBasePlayer::Killed( entvars_t *pevAttacker, int iGib )
 				UTIL_SpeakAll( "buzwarn buzwarn, cleanup in sector d" );
 				break;
 			}
-		}
+		}*/
 		return;
 	}
 
