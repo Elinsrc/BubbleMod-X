@@ -533,8 +533,8 @@ void Host_Say( edict_t *pEntity, int teamonly )
 	else if( !strcmp( p, "fragsleft" ) )
 	{
 		if( fragsleft.value )
-			UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %i frags left on this map.\n",
-				 (int)fragsleft.value ) );
+			UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %i/%i frags left on this map.\n",
+				 (int)fragsleft.value, (int)fraglimit.value ) );
 		else
 			UTIL_ClientPrintAll( HUD_PRINTTALK, "<SERVER> No frag limit on this map.\n" );
 	}
@@ -559,7 +559,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 		UTIL_SayTime();
 	}
 	// map voting
-	else if( !strcmp( p, "rockthevote" ) && ( g_VoteStatus == 1 ) )
+	else if( !strcmp( p, "rockthevote" ) || !strcmp( p, "rtv" ) && ( g_VoteStatus == 1 ) )
 	{
 		int players = CountPlayers();
 		int votesNeeded = ( players * 3 / 4 ) + ( ( players < 3 ) ? 1 : 0 );
@@ -583,7 +583,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 				votesNeeded,
 				players ) );
 	}
-	else if( !strcmp( p, "rockthevote" ) && ( g_VoteStatus == 0 ) )
+	else if( !strcmp( p, "rockthevote" ) || !strcmp( p, "rtv" ) && ( g_VoteStatus == 0 ) )
 	{
 		if( !bm_voting.value )
 		{
