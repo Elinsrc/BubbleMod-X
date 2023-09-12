@@ -150,6 +150,8 @@ extern cvar_t   bm_fade_victim;
 extern cvar_t   bm_fade_victim_color;
 extern cvar_t   bm_victim_sound;
 extern cvar_t   bm_victim_sound_path;
+
+extern cvar_t   bm_allowdrop;
 // BMOD End - CVARs
 
 // BMOD Begin - server commands

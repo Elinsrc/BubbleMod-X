@@ -20,6 +20,7 @@
 #include "player.h"
 #include "weapons.h"
 #include "BMOD_boxmarker.h"
+#include "BMOD_admin.h"
 
 BOOL		g_fIsXash3D;
 
@@ -51,9 +52,9 @@ cvar_t teamlist		= { "mp_teamlist","hgrunt;scientist", FCVAR_SERVER };
 cvar_t teamoverride	= { "mp_teamoverride","1" };
 cvar_t defaultteam	= { "mp_defaultteam","0" };
 cvar_t allowmonsters	= { "mp_allowmonsters","0", FCVAR_SERVER };
-cvar_t bhopcap		= { "mp_bhopcap", "1", FCVAR_SERVER };
+cvar_t bhopcap		= { "mp_bhopcap", "0", FCVAR_SERVER };
 
-cvar_t allow_spectators = { "allow_spectators", "0", FCVAR_SERVER };	// 0 prevents players from being spectators
+cvar_t allow_spectators = { "allow_spectators", "1", FCVAR_SERVER };	// 0 prevents players from being spectators
 cvar_t multibyte_only = { "mp_multibyte_only", "0", FCVAR_SERVER };
 
 cvar_t mp_chattime	= { "mp_chattime","10", FCVAR_SERVER };
@@ -560,12 +561,16 @@ cvar_t  bm_fade_victim = { "bm_fade_victim", "1", FCVAR_SERVER };
 cvar_t  bm_fade_victim_color = { "bm_fade_victim_color", "22FF00A0", FCVAR_SERVER };
 cvar_t  bm_victim_sound = { "bm_victim_sound", "1", FCVAR_SERVER };
 cvar_t  bm_victim_sound_path = { "bm_victim_sound_path", "buttons/bell1.wav", FCVAR_SERVER };
+
+cvar_t  bm_allowdrop = { "bm_allowdrop", "1", FCVAR_SERVER };
 // BMOD End - CVARs
 
 // Register your console variables here
 // This gets called one time when the game is initialied
 void GameDLLInit( void )
 {
+	Admin_RegisterCVars();
+
 	// Register cvars here:
 	if( CVAR_GET_POINTER( "build" ) )
 		g_fIsXash3D = TRUE;
@@ -1084,6 +1089,8 @@ void GameDLLInit( void )
 	CVAR_REGISTER( &bm_fade_victim_color );
 	CVAR_REGISTER( &bm_victim_sound );
 	CVAR_REGISTER( &bm_victim_sound_path );
+
+	CVAR_REGISTER( &bm_allowdrop );
 	// BMOD End - CVARs
 
 	// BMOD Begin - Server commands

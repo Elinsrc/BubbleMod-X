@@ -29,7 +29,7 @@
 
 #define OBS_CHASE_LOCKED		1
 #define OBS_CHASE_FREE			2
-#define OBS_ROAMING			3		
+#define OBS_ROAMING				3
 /*
 typedef enum
 {

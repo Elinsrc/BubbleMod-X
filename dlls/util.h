@@ -596,6 +596,12 @@ void UTIL_SaveRestorePlayer( CBasePlayer *pPlayer, BOOL save, BOOL resetall );
 void UTIL_Speak_2_l33t( char *szTarget, char *szString );
 void UTIL_SayTime( void );
 int UTIL_axtoi( char *hexStg );
+
+void PrintClientMsg( CBasePlayer *pPlayer, const char *format, ... );
+const char *GetAuthID( CBasePlayer *pPlayer );
+const char *PlayerName( CBaseEntity *pPlayer );
+CBasePlayer* GetPlayerByUID( int userId );
+bool Addons_ClientCommand( CBasePlayer *player, const char *pCmd );
 // BMOD End - Custom UTIL functions
 #endif // UTIL_H
 

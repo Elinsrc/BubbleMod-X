@@ -39,6 +39,7 @@
 #include "usercmd.h"
 #include "netadr.h"
 #include "pm_shared.h"
+#include "BMOD_admin.h"
 
 extern DLL_GLOBAL ULONG		g_ulModelIndexPlayer;
 extern DLL_GLOBAL BOOL		g_fGameOver;
@@ -399,10 +400,15 @@ void Host_Say( edict_t *pEntity, int teamonly )
 		return;  // no character found, so say nothing
 
 	// turn on color set 2  (color on,  no sound)
-	if( player->IsObserver() )
-		_snprintf( text, sizeof(text) - 1, "%c(SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
+	if( player->IsObserver())
+		if(player->IsAdmin)
+			_snprintf( text, sizeof(text) - 1, "%c(ADMIN-SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
+		else
+			_snprintf( text, sizeof(text) - 1, "%c(SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
 	else if( teamonly )
 		_snprintf( text, sizeof(text) - 1, "%c(TEAM) %s: ", 2, STRING( pEntity->v.netname ) );
+	else if(player->IsAdmin)
+		_snprintf( text, sizeof(text) - 1, "%c(ADMIN) %s: ", 2, STRING( pEntity->v.netname ) );
 	else
 		_snprintf( text, sizeof(text) - 1, "%c%s: ", 2, STRING( pEntity->v.netname ) );
 	text[sizeof(text) - 1] = '\0';
@@ -778,8 +784,13 @@ void ClientCommand( edict_t *pEntity )
 	}
 	else if( FStrEq( pcmd, "drop" ) )
 	{
-		// player is dropping an item. 
-		GetClassPtr( (CBasePlayer *)pev )->DropPlayerItem( (char *)CMD_ARGV( 1 ) );
+		// player is dropping an item.
+		CBasePlayer *pPlayer = GetClassPtr( (CBasePlayer *)pev );
+
+		if( bm_allowdrop.value || pPlayer->IsAdmin)
+			pPlayer->DropPlayerItem( (char *)CMD_ARGV( 1 ) );
+		else
+			ClientPrint( pev, HUD_PRINTCENTER, "Drop is disabled!\n" );
 	}
 	else if( FStrEq( pcmd, "fov" ) )
 	{
@@ -810,14 +821,14 @@ void ClientCommand( edict_t *pEntity )
 		if( !pPlayer->IsObserver() )
 		{
 			// always allow proxies to become a spectator
-			if( ( pev->flags & FL_PROXY ) || allow_spectators.value )
+			if( ( pev->flags & FL_PROXY ) || allow_spectators.value || pPlayer->IsAdmin )
 			{
 				edict_t *pentSpawnSpot = g_pGameRules->GetPlayerSpawnSpot( pPlayer );
 				pPlayer->StartObserver( pev->origin, VARS( pentSpawnSpot )->angles );
 
 				// notify other clients of player switching to spectator mode
-				UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s switched to spectator mode\n",
-						( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
+				if( !pPlayer->IsAdmin )
+					UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s switched to spectator mode\n", ( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
 			}
 			else
 				ClientPrint( pev, HUD_PRINTCENTER, "Spectator mode is disabled!\n" );
@@ -827,8 +838,8 @@ void ClientCommand( edict_t *pEntity )
 			pPlayer->StopObserver();
 
 			// notify other clients of player left spectators
-			UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has left spectator mode\n",
-					( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
+			if( !pPlayer->IsAdmin )
+				UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has left spectator mode\n", ( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
 		}
 	}
 	else if( FStrEq( pcmd, "specmode" ) ) // new spectator mode
@@ -906,7 +917,7 @@ void ClientCommand( edict_t *pEntity )
 
 		return;
 	}
-	else
+	else if( !Addons_ClientCommand( GetClassPtr( (CBasePlayer *)pev ), pcmd ))
 	{
 		// tell the user they entered an unknown command
 		char command[128];

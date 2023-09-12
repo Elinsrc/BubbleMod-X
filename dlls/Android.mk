@@ -41,6 +41,7 @@ LOCAL_SRC_FILES := agrunt.cpp airtank.cpp \
            bmodels.cpp \
            bullsquid.cpp \
            buttons.cpp \
+           bubblemod/BMOD_admin.cpp \
 	   bubblemod/BMOD_boxmarker.cpp \
 	   bubblemod/BMOD_CameraPoint.cpp \
 	   bubblemod/BMOD_egon.cpp \
