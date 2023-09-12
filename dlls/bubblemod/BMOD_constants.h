@@ -41,12 +41,6 @@
 // Fill this in with the title of your bubblemod branch
 #define BMOD_BRANCH_NAME	"Bugfixed and updated Bubblemod"
 
-// The version of your branch
-#define BMOD_BRANCH_VERSION	"0.1a"
-
-// The URL of the website describing your branch
-#define BMOD_BRANCH_URL		"https://github.com/Elinsrc/BubbleMod-X"
-
 // End branch customizations
 // ---------------------------------------------------------------
 

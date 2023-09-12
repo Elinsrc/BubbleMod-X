@@ -27,6 +27,7 @@
 #include "BMOD_messaging.h"
 #include "game.h"
 #include "BMOD_constants.h"
+#include "build_info.h"
 
 extern cvar_t fragsleft;
 // extern cvar_t timelimit;
@@ -50,12 +51,13 @@ void PrintMessage( CBaseEntity *pEnt, int iChannel, Vector vecColor, Vector vecT
 	{
 		char szTime[51] = "No Limit";
 
-		sprintf(szText, "BubbleMod-X\n%s\n%s\nVersion %s - %s %s\n\nCurrent Map: %s\nNext Map: %s\nFrags Left: %i/%i",
+		sprintf(szText, "BubbleMod-X\n%s\n%s\nBuilt %s, commit %s, architecture %s, platform %s\n\nCurrent Map: %s\nNext Map: %s\nFrags Left: %i/%i",
 		BMOD_BRANCH_NAME,
-		BMOD_BRANCH_URL,
-		BMOD_BRANCH_VERSION,
-		BMOD_PLATFORM, 
-		BMOD_ARCH,
+		BuildInfo::GetGitHubLink(),
+		BuildInfo::GetDate(),
+		BuildInfo::GetCommitHash(),
+		BuildInfo::GetArchitecture(),
+		BuildInfo::GetPlatform(),
 		CVAR_GET_STRING("bm_map"), 
 		CVAR_GET_STRING("bm_nextmap"), 
 		(int)fragsleft.value,

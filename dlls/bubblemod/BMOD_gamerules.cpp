@@ -32,6 +32,7 @@
 #include	"gamerules.h"
 #include	"game.h"
 #include	"BMOD_constants.h"
+#include	"build_info.h"
 
 #define MAX_RULE_BUFFER 1024
 
@@ -359,10 +360,9 @@ void CHalfLifeMultiplay :: BMOD_Think ( void )
 
 	if (setVarsTime < gpGlobals->time ) 
 	{
-		g_engfuncs.pfnCvar_DirectSet( &bm_ver, UTIL_VarArgs( "%s", BMOD_VERSION ) );
 		g_engfuncs.pfnCvar_DirectSet( &bm_bname, UTIL_VarArgs( "%s", BMOD_BRANCH_NAME ) );
-		g_engfuncs.pfnCvar_DirectSet( &bm_bver, UTIL_VarArgs( "%s", BMOD_BRANCH_VERSION ) );
-		g_engfuncs.pfnCvar_DirectSet( &bm_burl, UTIL_VarArgs( "%s", BMOD_BRANCH_URL ) );
+		g_engfuncs.pfnCvar_DirectSet( &bm_ver, UTIL_VarArgs( "Built %s, commit %s, architecture %s, platform %s", BuildInfo::GetDate(), BuildInfo::GetCommitHash(), BuildInfo::GetArchitecture(), BuildInfo::GetPlatform() ) );
+		g_engfuncs.pfnCvar_DirectSet( &bm_burl, UTIL_VarArgs( "%s", BuildInfo::GetGitHubLink() ) );
 		
 		BMOD_UpdateGuns();
 		BMOD_UpdateMods();
