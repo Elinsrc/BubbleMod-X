@@ -31,7 +31,7 @@ void Admin_LogAttempt( CBasePlayer *pPlayer, char *LogType )
 		if( !ip || !ip[0] )
 			ip = "UNKNOWN";
 
-		fprintf( fladminlog, "%s %s %s %s %s\n", time_str, LogType, ip, GETPLAYERAUTHID( pPlayer->edict() ), PlayerName( pPlayer ) ); // Timestamp, LogType, IP Address, XashID, Nickname
+		fprintf( fladminlog, "%s %s %s %s %s\n", time_str, LogType, ip, GETPLAYERAUTHID( pPlayer->edict() ), PlayerName( pPlayer ) ); // Timestamp, LogType, IP Address, EngineID, Nickname
 		fclose( fladminlog );
 
 		if( admin_kickonfail.value && !strcmp( LogType, "Failure login:" ) )
@@ -78,103 +78,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	if( !pPlayer->IsAdmin )
 		return true;
 
-	if( FStrEq(pCmd, "admin_sudo") )
-	{
-		int	j;
-		char	*p;
-		char	text[128];
-		const char *pc, *pcmd = CMD_ARGV( 0 );
-
-		if( CMD_ARGC() < 3 )
-		{
-			PrintClientMsg( pPlayer, "Usage: admin_sudo <UserID> <Command>\n" );
-			return true;
-		}
-
-		short int UserID;
-
-		if( CMD_ARGV(1)[0] == '#' )
-			UserID = atoi( CMD_ARGV( 1 ) + 1 );
-		else
-			UserID = atoi( CMD_ARGV( 1 ) );
-
-		p = (char *)CMD_ARGS();
-
-		// Skip over the UID
-		while( *p != ' ')
-			p++;
-		while( *p == ' ')
-			p++;
-
-		// make sure the text has content
-		for( pc = p; pc != NULL && *pc != 0; pc++ )
-		{
-			if( isprint( *pc ) && !isspace( *pc ) )
-			{
-				pc = NULL;	// we've found an alphanumeric character,  so text is valid
-				break;
-			}
-		}
-
-		j = sizeof(text) - 2 - strlen( text );  // -2 for /n and null terminator
-		if( (int)strlen( p ) > j )
-			p[j] = 0;
-
-		strcat( text, p );
-		strcat( text, "\n" );
-
-		CBasePlayer *pSudoer = GetPlayerByUID( UserID );
-
-		if( !pSudoer )
-		{
-			PrintClientMsg( pPlayer, "Invalid player!\n" );
-			return true;
-		}
-
-		CLIENT_COMMAND( pSudoer->edict(), "%s\n", text );
-		PrintClientMsg( pPlayer, "Command was sent to %s\n", STRING( pSudoer->pev->netname ) );
-		return true;
-	}
-	else if( FStrEq(pCmd, "admin_strip") )
-	{
-		if( CMD_ARGC() > 3 )
-		{
-			PrintClientMsg( pPlayer, "Usage: admin_strip <1/0> <UserID>\n" );
-			return true;
-		}
-
-		BOOL StripSuit = atoi( CMD_ARGV( 1 ) );
-		short int UserID = atoi( CMD_ARGV( 2 ) );
-		CBasePlayer *pStripper = NULL;
-
-		if( CMD_ARGV( 2 ) != NULL )
-			pStripper = GetPlayerByUID( UserID );
-		else
-			pStripper = pPlayer;
-
-		if( !pStripper && !UserID && pStripper != pPlayer )
-		{
-			PrintClientMsg( pPlayer, "Invalid player!\n" );
-			return true;
-		}
-
-		if( pStripper == pPlayer )
-			PrintClientMsg( pPlayer, "Removed all your items\n" );
-		else
-			PrintClientMsg( pPlayer, "Removed all %s items\n", STRING( pStripper->pev->netname ) );
-
-		if( StripSuit )
-		{
-			pStripper->RemoveAllItems( TRUE );
-		}
-		else
-		{
-			pStripper->RemoveAllItems( FALSE );
-		}
-
-		return true;
-	}
-	else if( FStrEq(pCmd, "admin_notarget") || FStrEq(pCmd, "admin_notar") )
+	if( FStrEq(pCmd, "admin_notarget") || FStrEq(pCmd, "admin_notar") )
 	{
 		if( !FBitSet( pPlayer->pev->flags, FL_NOTARGET ) )
 		{
@@ -280,49 +184,60 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		Admin_LogAttempt( pPlayer, "Successful logout:" );
 		return true;
 	}
-	else if( FStrEq(pCmd, "s" ) )
-    {
-        BModCmd_AdminSay();
-    }
-    else if( FStrEq(pCmd, "w" ) )
-    {
-        BModCmd_AdminWhisper();
-    }
-    else if( FStrEq(pCmd, "markspawnpoints" ) )
-    {
-        BModCmd_ShowSpawns();
-    }
-    else if( FStrEq(pCmd, "sspeak" ) )
-    {
-        BModCmd_SpeakAll();
-    }
-    else if( FStrEq(pCmd, "create" ) )
-    {
-        BModCmd_Create();
-    }
-    else if( FStrEq(pCmd, "remove" ) )
-    {
-        BModCmd_Remove();
-    }
-    else if( FStrEq(pCmd, "delete" ) )
-    {
-        BModCmd_Delete();
-    }
-    else if( FStrEq(pCmd, "replace" ) )
-    {
-        BModCmd_Replace();
-    }
-    else if( FStrEq(pCmd, "info" ) )
-    {
-        BModCmd_Info();
-    }
-    else if( FStrEq(pCmd, "llama" ) )
-    {
-        BModCmd_Llama();
-    }
-    else if( FStrEq(pCmd, "unlama" ) )
-    {
-        BModCmd_Unllama();
-    }
+	else if( FStrEq(pCmd, "s" ) ) // What's below it will be completed in the future
+	{
+		BModCmd_AdminSay();
+		return true;
+	}
+	else if( FStrEq(pCmd, "w" ) )
+	{
+		BModCmd_AdminWhisper();
+		return true;
+	}
+	else if( FStrEq(pCmd, "markspawnpoints" ) )
+	{
+		BModCmd_ShowSpawns();
+		return true;
+	}
+	else if( FStrEq(pCmd, "sspeak" ) )
+	{
+		BModCmd_SpeakAll();
+		return true;
+	}
+	else if( FStrEq(pCmd, "create" ) )
+	{
+		BModCmd_Create();
+		return true;
+	}
+	else if( FStrEq(pCmd, "remove" ) )
+	{
+		BModCmd_Remove();
+		return true;
+	}
+	else if( FStrEq(pCmd, "delete" ) )
+	{
+		BModCmd_Delete();
+		return true;
+	}
+	else if( FStrEq(pCmd, "replace" ) )
+	{
+		BModCmd_Replace();
+		return true;
+	}
+	else if( FStrEq(pCmd, "info" ) )
+	{
+		BModCmd_Info();
+		return true;
+	}
+	else if( FStrEq(pCmd, "llama" ) )
+	{
+		BModCmd_Llama();
+		return true;
+	}
+	else if( FStrEq(pCmd, "unlama" ) )
+	{
+		BModCmd_Unllama();
+		return true;
+	}
 	return false;
 }

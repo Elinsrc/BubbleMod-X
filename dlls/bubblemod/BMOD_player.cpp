@@ -222,6 +222,8 @@ void CBasePlayer::Observer_FindNextPlayer( bool bReverse )
 // Handle buttons in observer mode
 void CBasePlayer::Observer_HandleButtons()
 {
+	CBasePlayer *pPlayer = GetClassPtr( (CBasePlayer *)pev );
+
 	// Slow down mouse clicks
 	if ( m_fMsgTimer <= gpGlobals->time )
 	{
@@ -265,7 +267,8 @@ void CBasePlayer::Observer_HandleButtons()
 			m_fMsgTimer = gpGlobals->time + 0.2f;
 
 			// notify other clients of player left spectators
-			UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has left spectator mode\n",
+			if( !pPlayer->IsAdmin )
+				UTIL_ClientPrintAll( HUD_PRINTNOTIFY, UTIL_VarArgs( "%s has left spectator mode\n",
 					( pev->netname && ( STRING( pev->netname ) )[0] != 0 ) ? STRING( pev->netname ) : "unconnected" ) );
 		}		
 	}
