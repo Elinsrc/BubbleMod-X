@@ -197,6 +197,20 @@ void ClientKill( edict_t *pEntity )
 
 	pl->m_fNextSuicideTime = gpGlobals->time + 1.0f;  // don't let them suicide for 5 seconds after suiciding
 
+	// prevent death in spectator mode
+	if ( pev->iuser1 != OBS_NONE)
+	{
+		ClientPrint( pev, HUD_PRINTCONSOLE, UTIL_VarArgs( "Can't suicide while in spectator mode!\n" ) );
+		return;
+	}
+
+	// prevent death if already dead
+	if ( pev->deadflag != DEAD_NO)
+	{
+		ClientPrint( pev, HUD_PRINTCONSOLE, UTIL_VarArgs( "Can't suicide -- already dead!\n" ) );
+		return;
+	}
+
 	// have the player kill themself
 	pev->health = 0;
 	pl->Killed( pev, GIB_NEVER );
