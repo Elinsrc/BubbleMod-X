@@ -617,3 +617,18 @@ bool Addons_ClientCommand( CBasePlayer *pPlayer, const char *pCmd )
 	if( Admin_ClientCommand( pPlayer->edict() ) )
 		return true;
 }
+
+// Helper function for finding a player pointer by UID.
+CBasePlayer* GetPlayerByUID( int userId )
+{
+	CBasePlayer *client = NULL;
+
+	while( ( ( client = (CBasePlayer*)UTIL_FindEntityByClassname( client, "player" ) ) != NULL )
+		&& ( client->IsPlayer() ) )
+	{
+		if( userId == GETPLAYERUSERID( client->edict() ) )
+			return client;
+	}
+
+	return 0;
+}

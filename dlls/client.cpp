@@ -402,13 +402,13 @@ void Host_Say( edict_t *pEntity, int teamonly )
 	// turn on color set 2  (color on,  no sound)
 	if( player->IsObserver())
 		if(player->IsAdmin)
-			_snprintf( text, sizeof(text) - 1, "%c(ADMIN-SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
+			_snprintf( text, sizeof(text) - 1, "%c<ADMIN-SPEC> %s: ", 2, STRING( pEntity->v.netname ) );
 		else
-			_snprintf( text, sizeof(text) - 1, "%c(SPEC) %s: ", 2, STRING( pEntity->v.netname ) );
+			_snprintf( text, sizeof(text) - 1, "%c<SPEC> %s: ", 2, STRING( pEntity->v.netname ) );
 	else if( teamonly )
-		_snprintf( text, sizeof(text) - 1, "%c(TEAM) %s: ", 2, STRING( pEntity->v.netname ) );
+		_snprintf( text, sizeof(text) - 1, "%c<TEAM> %s: ", 2, STRING( pEntity->v.netname ) );
 	else if(player->IsAdmin)
-		_snprintf( text, sizeof(text) - 1, "%c(ADMIN) %s: ", 2, STRING( pEntity->v.netname ) );
+		_snprintf( text, sizeof(text) - 1, "%c<ADMIN> %s: ", 2, STRING( pEntity->v.netname ) );
 	else
 		_snprintf( text, sizeof(text) - 1, "%c%s: ", 2, STRING( pEntity->v.netname ) );
 	text[sizeof(text) - 1] = '\0';

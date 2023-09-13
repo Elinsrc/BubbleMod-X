@@ -153,17 +153,3 @@ extern cvar_t   bm_victim_sound_path;
 
 extern cvar_t   bm_allowdrop;
 // BMOD End - CVARs
-
-// BMOD Begin - server commands
-void BModCmd_AdminSay( void );
-void BModCmd_AdminWhisper( void );
-void BModCmd_ShowSpawns( void );
-void BModCmd_SpeakAll( void );
-void BModCmd_Create( void );
-void BModCmd_Remove( void );
-void BModCmd_Delete( void );
-void BModCmd_Replace( void );
-void BModCmd_Info( void );
-void BModCmd_Llama( void );
-void BModCmd_Unllama( void );
-// BMOD End - server commands
