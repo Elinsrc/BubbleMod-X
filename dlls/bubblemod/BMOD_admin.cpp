@@ -189,7 +189,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		int	j;
 		char	*p;
 		char	text[128];
-		const char *pc, *pcmd = CMD_ARGV(0);
+		const char *pc;
 
 		// We can get a raw string now, without the "say " prepended
 		if( CMD_ARGC() < 2 )
@@ -230,7 +230,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		int	j;
 		char	*p;
 		char	text[128];
-		const char *pc, *pcmd = CMD_ARGV( 0 );
+		const char *pc;
 
 		// We can get a raw string now, without the "say " prepended
 		if( CMD_ARGC() < 3 )
@@ -692,7 +692,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		PrintClientMsg( pPlayer, "%s is now a llama! Bleeet!\n", STRING( Player->pev->netname ) );
 		return true;
 	}
-	else if( FStrEq(pCmd, "admin_unlama" ) )
+	else if( FStrEq(pCmd, "admin_unllama" ) )
 	{
 		if( CMD_ARGC() < 2 )
 		{
