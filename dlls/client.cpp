@@ -538,15 +538,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 	// BMOD Begin - Anti Spam
 	talker->m_iSpamSay++;
 	// BMOD End - Anti Spam
-	if( !strcmp( p, "timeleft" ) )
-	{
-		if( timeleft.value )
-			UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %i:%0.2i left on this map.\n",
-				 (int)timeleft.value / 60, (int)timeleft.value % 60 ) );
-		else
-			UTIL_ClientPrintAll( HUD_PRINTTALK, "<SERVER> No time limit on this map.\n" );
-	}
-	else if( !strcmp( p, "gagform" ) )
+	if( !strcmp( p, "gagform" ) )
 	{
 		UTIL_ClientPrintAll( HUD_PRINTTALK, "<SERVER> I was just kidding Form. :)\n" );
 	}
