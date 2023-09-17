@@ -436,7 +436,7 @@ void CHalfLifeMultiplay :: BMOD_Think ( void )
 	if ((g_VoteStatus == 2) && (g_VoteTimer < gpGlobals->time))
 	{
 		g_VoteStatus = 0;
-		CVAR_SET_FLOAT( "mp_timelimit", 1); 
+		GoToIntermission();
 	}
 	// BMod
 }
