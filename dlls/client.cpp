@@ -155,6 +155,12 @@ void ClientDisconnect( edict_t *pEntity )
 	UTIL_SetOrigin( &pEntity->v, pEntity->v.origin );
 
 	g_pGameRules->ClientDisconnected( pEntity );
+
+	// Mark player as disconnected
+	entvars_t *pev = &pEntity->v;
+	CBasePlayer *pl = (CBasePlayer*) CBasePlayer::Instance( pev );
+	if (pl)
+		pl->Disconnect();
 }
 
 // called by ClientKill and DeadThink
@@ -236,6 +242,14 @@ void ClientPutInServer( edict_t *pEntity )
 	pPlayer = GetClassPtr( (CBasePlayer *)pev );
 	pPlayer->SetCustomDecalFrames( -1 ); // Assume none;
 	pPlayer->SetPrefsFromUserinfo( g_engfuncs.pfnGetInfoKeyBuffer( pEntity ) );
+
+	// Check if bot
+	const char *auth;
+	if ((pPlayer->pev->flags & FL_FAKECLIENT) == FL_FAKECLIENT ||
+		(auth = GETPLAYERAUTHID(pPlayer->edict())) && strcmp(auth, "BOT") == 0)
+	{
+		pPlayer->m_bIsBot = true;
+	}
 
 	// Allocate a CBasePlayer for pev, and call spawn
 	pPlayer->Spawn();

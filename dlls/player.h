@@ -383,6 +383,9 @@ public:
 	bool m_bSentBhopcap; // If false, the player just joined and needs a bhopcap message.
 
 	bool IsAdmin;
+
+	BOOL m_bIsBot;
+	void Disconnect() { m_bIsBot = FALSE; }
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025

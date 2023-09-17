@@ -1844,7 +1844,7 @@ int CountPlayers( void )
 
 		// BMOD Edit - Only count connected players.
 		//if( pEnt )
-		if( pEnt && ( !FNullEnt( pEnt->edict() ) ) && pEnt->m_bIsConnected )
+		if( pEnt && ( !FNullEnt( pEnt->edict() ) ) && pEnt->m_bIsConnected && !pEnt->m_bIsBot )
 		{
 			num = num + 1;
 		}
