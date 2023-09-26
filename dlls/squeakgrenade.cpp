@@ -406,7 +406,13 @@ void CSqueak::Spawn()
 	m_iId = WEAPON_SNARK;
 	SET_MODEL( ENT( pev ), "models/w_sqknest.mdl" );
 
-	FallInit();//get ready to fall down.
+	pev->movetype = MOVETYPE_TOSS;
+	pev->solid = SOLID_BBOX;
+
+	SetTouch( &CBasePlayerItem::DefaultTouch );
+	SetThink( &CBasePlayerItem::FallThink );
+
+	pev->nextthink = gpGlobals->time + 0.1f;
 
 	m_iDefaultAmmo = SNARK_DEFAULT_GIVE;
 

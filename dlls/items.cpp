@@ -307,7 +307,7 @@ LINK_ENTITY_TO_CLASS( item_security, CItemSecurity )
 class CItemLongJump : public CItem
 {
 	void Spawn( void )
-	{ 
+	{
 		Precache();
 		SET_MODEL( ENT( pev ), "models/w_longjump.mdl" );
 		CItem::Spawn();

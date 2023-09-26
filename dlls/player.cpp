@@ -783,8 +783,8 @@ void CBasePlayer::PackDeadPlayerItems( void )
 	// create a box to pack the stuff into.
 	CWeaponBox *pWeaponBox = (CWeaponBox *)CBaseEntity::Create( "weaponbox", pev->origin, pev->angles, edict() );
 
-	pWeaponBox->pev->angles.x = 0;// don't let weaponbox tilt.
-	pWeaponBox->pev->angles.z = 0;
+	pWeaponBox->pev->angles.x = pWeaponBox->pev->angles.z = 0;
+	pWeaponBox->pev->angles.y = RANDOM_LONG ( 0, 360 );
 
 	pWeaponBox->SetThink( &CWeaponBox::Kill );
 	pWeaponBox->pev->nextthink = gpGlobals->time + 120;
@@ -4660,8 +4660,8 @@ void CBasePlayer::DropPlayerItem( char *pszItemName )
 			pev->weapons &= ~( 1 << pWeapon->m_iId );// take item off hud
 
 			CWeaponBox *pWeaponBox = (CWeaponBox *)CBaseEntity::Create( "weaponbox", pev->origin + gpGlobals->v_forward * 10, pev->angles, edict() );
-			pWeaponBox->pev->angles.x = 0;
-			pWeaponBox->pev->angles.z = 0;
+			pWeaponBox->pev->angles.x = pWeaponBox->pev->angles.z = 0;
+			pWeaponBox->pev->angles.y = RANDOM_LONG ( 0, 360 );
 			pWeaponBox->PackWeapon( pWeapon );
 			pWeaponBox->pev->velocity = gpGlobals->v_forward * 300 + gpGlobals->v_forward * 100;
 			

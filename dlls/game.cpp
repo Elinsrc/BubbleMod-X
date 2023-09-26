@@ -562,6 +562,9 @@ cvar_t  bm_fade_victim_color = { "bm_fade_victim_color", "22FF00A0", FCVAR_SERVE
 cvar_t  bm_victim_sound = { "bm_victim_sound", "1", FCVAR_SERVER };
 cvar_t  bm_victim_sound_path = { "bm_victim_sound_path", "buttons/bell1.wav", FCVAR_SERVER };
 
+cvar_t  bm_weapon_fly = { "bm_weapon_fly", "-50", FCVAR_SERVER };
+cvar_t  bm_weapon_fly_glow = { "bm_weapon_fly_glow", "1", FCVAR_SERVER };
+
 cvar_t  bm_allowdrop = { "bm_allowdrop", "1", FCVAR_SERVER };
 // BMOD End - CVARs
 
@@ -1089,6 +1092,9 @@ void GameDLLInit( void )
 	CVAR_REGISTER( &bm_fade_victim_color );
 	CVAR_REGISTER( &bm_victim_sound );
 	CVAR_REGISTER( &bm_victim_sound_path );
+
+	CVAR_REGISTER( &bm_weapon_fly );
+	CVAR_REGISTER( &bm_weapon_fly_glow );
 
 	CVAR_REGISTER( &bm_allowdrop );
 	// BMOD End - CVARs

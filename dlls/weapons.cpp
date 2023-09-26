@@ -31,6 +31,7 @@
 #include "decals.h"
 #include "gamerules.h"
 #include "egon.h"
+#include "game.h"
 
 extern CGraph WorldGraph;
 extern int gEvilImpulse101;
@@ -454,9 +455,36 @@ void CBasePlayerItem::SetObjectCollisionBox( void )
 //=========================================================
 void CBasePlayerItem::FallInit( void )
 {
-	pev->movetype = MOVETYPE_TOSS;
-	pev->solid = SOLID_BBOX;
+	if (bm_weapon_fly.value)
+	{
+		pev->movetype = MOVETYPE_FLY;
+		pev->avelocity.y = bm_weapon_fly.value;
 
+		if(bm_weapon_fly_glow.value)
+		{
+			Vector  m_vWeaponColor;
+
+			switch (RANDOM_LONG(0,7))
+			{
+				case 0:	m_vWeaponColor = Vector( 0, 0, 200 ); break;
+				case 1:	m_vWeaponColor = Vector( 0, 200, 0 ); break;
+				case 2:	m_vWeaponColor = Vector( 200, 0, 0 ); break;
+				case 3:	m_vWeaponColor = Vector( 200, 0, 0 ); break;
+				case 4:	m_vWeaponColor = Vector( 200, 200, 0 ); break;
+				case 5:	m_vWeaponColor = Vector( 200, 200, 200 ); break;
+				case 6:	m_vWeaponColor = Vector( 0, 200, 200 ); break;
+				case 7:	m_vWeaponColor = Vector( 200, 0, 200 ); break;
+			}
+
+			pev->renderfx |= kRenderFxGlowShell;
+			pev->rendercolor = m_vWeaponColor;
+		}
+	}
+	else
+		pev->movetype = MOVETYPE_TOSS;
+
+	pev->solid = SOLID_TRIGGER;
+	
 	UTIL_SetOrigin( pev, pev->origin );
 	UTIL_SetSize( pev, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );//pointsize until it lands on the ground.
 
@@ -1080,8 +1108,16 @@ void CBasePlayerWeapon::Holster( int skiplocal /* = 0 */ )
 
 void CBasePlayerAmmo::Spawn( void )
 {
-	pev->movetype = MOVETYPE_TOSS;
+	if (bm_weapon_fly.value)
+	{
+		pev->movetype = MOVETYPE_FLY;
+		pev->avelocity.y = bm_weapon_fly.value;
+	}
+	else
+		pev->movetype = MOVETYPE_TOSS;
+
 	pev->solid = SOLID_TRIGGER;
+
 	UTIL_SetSize( pev, Vector( -16, -16, 0 ), Vector( 16, 16, 16 ) );
 	UTIL_SetOrigin( pev, pev->origin );
 
