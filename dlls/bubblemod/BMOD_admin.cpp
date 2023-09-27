@@ -13,7 +13,7 @@
 
 const char *AdminHelpCommands[BM_MAX_ADMINCOMMANDS] = {
 	"\n\n----- BubbleMod-X Admin: Commands -----",
-	"  1. admin_status - show players UID, ip, name"
+	"  1. admin_status - show players UID, ip, name",
 	"  2. admin_kick <PlayerUID>",
 	"  3. admin_ban <BanTime> <PlayerUID>",
 	"  4. admin_notarget",
