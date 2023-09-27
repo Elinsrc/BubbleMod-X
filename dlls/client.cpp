@@ -552,26 +552,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 	// BMOD Begin - Anti Spam
 	talker->m_iSpamSay++;
 	// BMOD End - Anti Spam
-	if( !strcmp( p, "gagform" ) )
-	{
-		UTIL_ClientPrintAll( HUD_PRINTTALK, "<SERVER> I was just kidding Form. :)\n" );
-	}
-	else if( !strcmp( p, "fragsleft" ) )
-	{
-		if( fragsleft.value )
-			UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %i/%i frags left on this map.\n",
-				 (int)fragsleft.value, (int)fraglimit.value ) );
-		else
-			UTIL_ClientPrintAll( HUD_PRINTTALK, "<SERVER> No frag limit on this map.\n" );
-	}
-	else if( !strcmp( p, "map" ) )
-	{
-		// g_pGameRules->BMOD_PreChangeLevel();
-		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> Current map is: \"%s\", next is: \"%s\"\n",
-			 STRING( gpGlobals->mapname ),
-			 CVAR_GET_STRING( "bm_nextmap" ) ) );
-	}
-	else if( !strcmp( p, "status" ) )
+	if( !strcmp( p, "status" ) )
 	{
 		// g_pGameRules->BMOD_PreChangeLevel();
 		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> Fragsleft: %i/%i   Map: \"%s\"   Next: \"%s\"\n",
@@ -580,7 +561,7 @@ void Host_Say( edict_t *pEntity, int teamonly )
 			 STRING( gpGlobals->mapname ), 
 			 CVAR_GET_STRING( "bm_nextmap" ) ) );
 	}
-	else if( !strcmp( p, "time" ) )
+	else if( !strcmp( p, "thetime" ) )
 	{
 		UTIL_SayTime();
 	}
@@ -737,6 +718,21 @@ ClientCommand
 called each time a player uses a "cmd" command
 ============
 */
+
+#define BM_MAX_COMMANDS 9
+
+const char *HelpCommands[BM_MAX_COMMANDS] = {
+	"\n\n----- BubbleMod-X Help: Commands -----",
+	"  1. say status - show fragsleft, fraglimit, curent and next map",
+	"  2. say thetime - show curent server time",
+	"  3. say rtv / say rockthevote - enable voting mode for changing the map",
+	"  4. say vote <mapname> - voted for map",
+	"  5. drop - drop curent weapon",
+	"  6. spectate - switch to spectator mode",
+	"  7. rs / resetscore - reset your score",
+	"----- End Commands -----",
+};
+
 extern cvar_t *g_enable_cheats;
 
 // Use CMD_ARGV,  CMD_ARGV, and CMD_ARGC to get pointers the character string command.
@@ -936,6 +932,16 @@ void ClientCommand( edict_t *pEntity )
 		}
 
 		return;
+	}
+	else if( FStrEq( pcmd, "bm_help" ) )
+	{
+		int i;
+		CBasePlayer *pPlayer = GetClassPtr( (CBasePlayer *)pev );
+
+		for(i = 0; i < BM_MAX_COMMANDS; i++)
+		{
+			ClientPrint( pev, HUD_PRINTCONSOLE, UTIL_VarArgs("%s\n", HelpCommands[i] ));
+		}
 	}
 	else if( !Addons_ClientCommand( GetClassPtr( (CBasePlayer *)pev ), pcmd ))
 	{

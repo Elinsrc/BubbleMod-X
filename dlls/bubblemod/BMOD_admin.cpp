@@ -9,6 +9,33 @@
 
 // Original code from https://github.com/tyabus/hlsdk-xash3d/
 
+#define BM_MAX_ADMINCOMMANDS 22
+
+const char *AdminHelpCommands[BM_MAX_ADMINCOMMANDS] = {
+	"\n\n----- BubbleMod-X Admin: Commands -----",
+	"  1. admin_status - show players UID, ip, name"
+	"  2. admin_kick <PlayerUID>",
+	"  3. admin_ban <BanTime> <PlayerUID>",
+	"  4. admin_notarget",
+	"  5. admin_god",
+	"  6. admin_invis",
+	"  7. admin_noclip",
+	"  8. admin_101 - give all weapons and items",
+	"  9. admin_logout - logout admin mode",
+	" 10. admin_say <Text> - say all players on behalf of the administrator",
+	" 11. admin_whisper <PlayerUID> <Text> - send a private message to a player",
+	" 12. admin_showspawns - show players spawns",
+	" 13. admin_speak <vox string>",
+	" 14. admin_create <entity> <xpos> <ypos> <zpos> <y angle>",
+	" 15. admin_remove <entity name>",
+	" 16. admin_replace <entity> <with entity>",
+	" 17. admin_delete <entity name> <xpos> <ypos> <zpos>",
+	" 18. admin_info <PlayerUID> - ",
+	" 19. admin_llama <PlayerUID>",
+	" 20. admin_unllama <PlayerUID>",
+	"----- End Commands -----",
+};
+
 extern int gEvilImpulse101;
 
 cvar_t admin_password = { "admin_password", "", FCVAR_SERVER | FCVAR_UNLOGGED };
@@ -29,7 +56,7 @@ void Admin_LogAttempt( CBasePlayer *pPlayer, char *LogType )
 		const char *ip = g_engfuncs.pfnInfoKeyValue( g_engfuncs.pfnGetInfoKeyBuffer( pPlayer->edict() ), "ip" );
 
 		if( !ip || !ip[0] )
-			ip = "UNKNOWN";
+			ip = "loopback";
 
 		fprintf( fladminlog, "%s %s %s %s %s\n", time_str, LogType, ip, GETPLAYERAUTHID( pPlayer->edict() ), PlayerName( pPlayer ) ); // Timestamp, LogType, IP Address, EngineID, Nickname
 		fclose( fladminlog );
@@ -714,6 +741,79 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s is unllamafied.\n", STRING( Player->pev->netname ) ) );
 		PrintClientMsg( pPlayer, "%s is unllamafied.\n", STRING( Player->pev->netname ) );
 		return true;
+	}
+	else if( FStrEq(pCmd, "admin_help"))
+	{
+		int i;
+
+		for(i = 0; i < BM_MAX_ADMINCOMMANDS; i++)
+		{
+			PrintClientMsg( pPlayer, "%s\n", AdminHelpCommands[i]);
+		}
+		return true;
+	}
+	else if( FStrEq(pCmd, "admin_status"))
+	{
+		PrintClientMsg( pPlayer, "\n\n----- BubbleMod-X Admin: Status -----\n - PlayerUID - IP - Name -\n" );
+
+		for( int i = 1; i <= gpGlobals->maxClients; i++ )
+		{
+			CBasePlayer *Player = (CBasePlayer*)UTIL_PlayerByIndex( i );
+
+			if( Player && ( !FNullEnt( Player->edict() ) ) && Player->m_bIsConnected )
+			{
+				const char *ip = g_engfuncs.pfnInfoKeyValue( g_engfuncs.pfnGetInfoKeyBuffer( Player->edict() ), "ip" );
+
+				if( !ip || !ip[0] )
+					ip = "loopback";
+
+				PrintClientMsg( pPlayer, "   %i    %s   %s\n", GETPLAYERUSERID( Player->edict()), ip, STRING( Player->pev->netname ) );
+			}
+		}
+
+		PrintClientMsg( pPlayer, "----- End Status -----\n" );
+		return true;
+	}
+	else if( FStrEq(pCmd, "admin_kick"))
+	{
+		if( CMD_ARGC() < 2 )
+		{
+			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_kick <PlayerUID>\n" );
+			return true;
+		}
+
+		int UID = atoi( CMD_ARGV( 1 ) );
+
+		CBasePlayer *Player = GetPlayerByUID( UID );
+		if( Player == NULL )
+		{
+			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			return true;
+		}
+
+		SERVER_COMMAND( UTIL_VarArgs( "kick #%i\n", UID ) );
+		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s was kicked", PlayerName( Player ) ) );
+	}
+	else if( FStrEq(pCmd, "admin_ban"))
+	{
+		if( CMD_ARGC() < 2 )
+		{
+			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_ban <BanTime> <PlayerUID>\n" );
+			return true;
+		}
+
+		int BanTime =  atoi( CMD_ARGV( 1 ) );
+		int UID = atoi( CMD_ARGV( 2 ) );
+
+		CBasePlayer *Player = GetPlayerByUID( UID );
+		if( Player == NULL )
+		{
+			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			return true;
+		}
+
+		SERVER_COMMAND( UTIL_VarArgs( "banid %i #%i kick\n", BanTime, UID ) );
+		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s was baned", PlayerName( Player ) ) );
 	}
 	return false;
 }

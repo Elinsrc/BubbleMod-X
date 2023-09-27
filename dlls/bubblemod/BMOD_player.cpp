@@ -232,7 +232,7 @@ void CBasePlayer::Observer_HandleButtons()
 		{
 			m_bSentMsg = TRUE;
 			PrintMessage( this, BMOD_CHAN_INFO, Vector (20,250,20), Vector (.5, 15, 2), "SPEC");
-			PrintMessage( this, BMOD_CHAN_RUNE, Vector (20,250,20), Vector (.5, 86400, 2), 
+			PrintMessage( this, BMOD_CHAN_RUNE, Vector (20,250,20), Vector (.5, 86400, 2),
 				"-Spectator Mode-\n FIRE=Spawn   JUMP=Switch Modes   ALT FIRE=Switch Targets");
 		}
 
