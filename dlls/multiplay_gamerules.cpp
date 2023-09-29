@@ -471,6 +471,11 @@ void CHalfLifeMultiplay::UpdateGameMode( CBasePlayer *pPlayer )
 
 void CHalfLifeMultiplay::InitHUD( CBasePlayer *pl )
 {
+	// Troll338cz
+	pl->m_bSendFirstMsg = gpGlobals->time + 7;
+	pl->m_bSendHelpMsg = TRUE;
+	//
+
 	// notify other clients of player joining the game
 	UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s has joined the game\n",
 		( pl->pev->netname && ( STRING( pl->pev->netname ) )[0] != 0 ) ? STRING( pl->pev->netname ) : "unconnected" ) );

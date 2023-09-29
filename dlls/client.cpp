@@ -1094,6 +1094,15 @@ void PlayerPreThink( edict_t *pEntity )
 	//ALERT( at_console, "PreThink( %g, frametime %g )\n", gpGlobals->time, gpGlobals->frametime );
 
 	CBasePlayer *pPlayer = (CBasePlayer *)GET_PRIVATE( pEntity );
+	entvars_t *pev = &pEntity->v;
+
+	// Troll338cz
+	if (pPlayer->m_bSendHelpMsg == TRUE && pPlayer->m_bSendFirstMsg <= gpGlobals->time )
+	{
+		ClientPrint( pev, HUD_PRINTTALK, "Type 'bm_help' in the console to see available commands\n" );
+		pPlayer->m_bSendHelpMsg = FALSE;
+	}
+	//
 
 	if( pPlayer )
 		pPlayer->PreThink();

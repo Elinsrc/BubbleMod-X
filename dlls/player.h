@@ -386,6 +386,9 @@ public:
 
 	BOOL m_bIsBot;
 	void Disconnect() { m_bIsBot = FALSE; }
+
+	bool m_bSendHelpMsg;
+	float m_bSendFirstMsg;
 };
 
 #define AUTOAIM_2DEGREES  0.0348994967025
