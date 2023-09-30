@@ -722,7 +722,7 @@ called each time a player uses a "cmd" command
 #define BM_MAX_COMMANDS 9
 
 const char *HelpCommands[BM_MAX_COMMANDS] = {
-	"\n\n----- BubbleMod-X Help: Commands -----",
+	"----- BubbleMod-X Help: Commands -----",
 	"  1. say status - show fragsleft, fraglimit, curent and next map",
 	"  2. say thetime - show curent server time",
 	"  3. say rtv / say rockthevote - enable voting mode for changing the map",
