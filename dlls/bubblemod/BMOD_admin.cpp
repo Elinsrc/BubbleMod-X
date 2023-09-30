@@ -30,7 +30,7 @@ const char *AdminHelpCommands[BM_MAX_ADMINCOMMANDS] = {
 	" 15. admin_remove <entity name>",
 	" 16. admin_replace <entity> <with entity>",
 	" 17. admin_delete <entity name> <xpos> <ypos> <zpos>",
-	" 18. admin_info <PlayerUID> - ",
+	" 18. admin_info <PlayerUID>",
 	" 19. admin_llama <PlayerUID>",
 	" 20. admin_unllama <PlayerUID>",
 	"----- End Commands -----",
@@ -81,7 +81,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 
 		if( CMD_ARGC() != 2 )
 		{
-			PrintClientMsg( pPlayer, "Usage: admin_login <password>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_login <password>\n" );
 			return true;
 		}
 
@@ -90,13 +90,13 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		if( !strcmp( passwordargv, admin_password.string ) )
 		{
 			pPlayer->IsAdmin = true;
-			PrintClientMsg( pPlayer, "Login successful\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Login successful!\nType 'admin_help' in the console to see available commands\n" );
 			ALERT( at_console, "Player %s: Became admin\n", PlayerName( pPlayer ) );
 			Admin_LogAttempt( pPlayer, "Became admin:" );
 		}
 		else
 		{
-			PrintClientMsg( pPlayer, "Login failed\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Login failed!\n" );
 			ALERT( at_console, "Player %s: Login failure\n", PlayerName( pPlayer ) );
 			Admin_LogAttempt( pPlayer, "Failure login:" );
 		}
@@ -110,12 +110,12 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		if( !FBitSet( pPlayer->pev->flags, FL_NOTARGET ) )
 		{
 			pPlayer->pev->flags |= FL_NOTARGET;
-			PrintClientMsg( pPlayer, "Admin notarget ON\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: notarget ON\n" );
 		}
 		else
 		{
 			pPlayer->pev->flags &= ~FL_NOTARGET;
-			PrintClientMsg( pPlayer, "Admin notarget OFF\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: notarget OFF\n" );
 		}
 		return true;
 	}
@@ -124,12 +124,12 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		if( !FBitSet( pPlayer->pev->flags, FL_GODMODE ) )
 		{
 			pPlayer->pev->flags |= FL_GODMODE;
-			PrintClientMsg( pPlayer, "Admin godmode ON\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: godmode ON\n" );
 		}
 		else
 		{
 			pPlayer->pev->flags &= ~FL_GODMODE;
-			PrintClientMsg( pPlayer, "Admin godmode OFF\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: godmode OFF\n" );
 		}
 		return true;
 	}
@@ -144,7 +144,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 			pPlayer->pev->flags |= FL_NOTARGET;
 			pPlayer->pev->flags |= FL_GODMODE;
 			pPlayer->m_fNoPlayerSound = TRUE;
-			PrintClientMsg( pPlayer, "Admin invisibility ON\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: invisibility ON\n" );
 		}
 		else
 		{
@@ -155,7 +155,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 			pPlayer->pev->effects &= ~EF_NODRAW;
 			pPlayer->pev->solid = SOLID_SLIDEBOX;
 			pPlayer->m_fNoPlayerSound = FALSE;
-			PrintClientMsg( pPlayer, "Admin invisibility OFF\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: invisibility OFF\n" );
 		}
 		return true;
 	}
@@ -164,12 +164,12 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		if( pPlayer->pev->movetype != MOVETYPE_NOCLIP )
 		{
 			pPlayer->pev->movetype = MOVETYPE_NOCLIP;
-			PrintClientMsg( pPlayer, "Admin noclip ON\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: noclip ON\n" );
 		}
 		else
 		{
 			pPlayer->pev->movetype = MOVETYPE_WALK;
-			PrintClientMsg( pPlayer, "Admin noclip OFF\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: noclip OFF\n" );
 		}
 		return true;
 	}
@@ -206,7 +206,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	else if( FStrEq(pCmd, "admin_logout" ) )
 	{
 		pPlayer->IsAdmin = false;
-		PrintClientMsg( pPlayer, "Successfully logged out\n" );
+		PrintClientMsg( pPlayer, "BubbleMod-X Admin: Successfully logged out!\n" );
 		ALERT( at_console, "Admin %s: Logging out\n", PlayerName( pPlayer ) );
 		Admin_LogAttempt( pPlayer, "Successful logout:" );
 		return true;
@@ -221,7 +221,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		// We can get a raw string now, without the "say " prepended
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_say \"<string>\"\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_say <string>\n" );
 			return true;
 		}
 
@@ -262,7 +262,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		// We can get a raw string now, without the "say " prepended
 		if( CMD_ARGC() < 3 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_whisper <PlayerUID> \"<string>\"\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_whisper <PlayerUID> <string>\n" );
 			return true;
 		}
 
@@ -271,7 +271,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		CBasePlayer *Player = GetPlayerByUID( UID );
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID!\n" );
 			return true;
 		}
 
@@ -314,7 +314,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 
 		if( marked )
 		{
-			PrintClientMsg( pPlayer, "Spawn points already marked!\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Spawn points already marked!\n" );
 			return true;
 		}
 
@@ -347,7 +347,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_speak \"<vox string>\"\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_speak <vox string>\n" );
 			return true;
 		}
 
@@ -388,7 +388,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( ( CMD_ARGC() < 6 ) )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_create <entity> <xpos> <ypos> <zpos> <y angle>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_create <entity> <xpos> <ypos> <zpos> <y angle>\n" );
 			return true;
 		}
 
@@ -443,7 +443,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		}
 		else
 		{
-			PrintClientMsg( pPlayer, "You only add items, ammo, weapons, or spawn points with this command.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: You only add items, ammo, weapons, or spawn points with this command.\n" );
 		}
 		return true;
 	}
@@ -451,7 +451,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( ( CMD_ARGC() < 2 ) )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_remove <entity name>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_remove <entity name>\n" );
 			return true;
 		}
 
@@ -502,7 +502,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		}
 		else
 		{
-			PrintClientMsg( pPlayer, "You only remove items, ammo, or weapons with this command.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: You only remove items, ammo, or weapons with this command.\n" );
 		}
 		return true;
 	}
@@ -510,7 +510,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( ( CMD_ARGC() < 5 ) )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_delete <entity name> <xpos> <ypos> <zpos>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_delete <entity name> <xpos> <ypos> <zpos>\n" );
 			return true;
 		}
 
@@ -560,18 +560,18 @@ bool Admin_ClientCommand( edict_t *pEntity )
 				{
 					target->Killed( NULL, 0 );
 					deleted = TRUE;
-					PrintClientMsg( pPlayer, "Entity deleted.\n" );
+					PrintClientMsg( pPlayer, "BubbleMod-X Admin: Entity deleted.\n" );
 				}
 			}
 
 			if( !deleted )
 			{
-				PrintClientMsg( pPlayer, "Entity not found.\n" );
+				PrintClientMsg( pPlayer, "BubbleMod-X Admin: Entity not found.\n" );
 			}
 		}
 		else
 		{
-			PrintClientMsg( pPlayer, "You only delete items, ammo, weapons, or spawn points with this command.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: You only delete items, ammo, weapons, or spawn points with this command.\n" );
 		}
 		return true;
 	}
@@ -579,7 +579,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( ( CMD_ARGC() < 3 ) )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_replace <entity> <with entity>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_replace <entity> <with entity>\n" );
 			return true;
 		}
 
@@ -664,7 +664,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		}
 		else
 		{
-			PrintClientMsg( pPlayer, "You only replace items, ammo, or weapons with this command.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: You only replace items, ammo, or weapons with this command.\n" );
 		}
 		return true;
 	}
@@ -672,7 +672,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_info <PlayerUID>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_info <PlayerUID>\n" );
 			return true;
 		}
 
@@ -681,7 +681,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		CBasePlayer *Player = GetPlayerByUID( UID );
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID.\n" );
 			return true;
 		}
 
@@ -700,7 +700,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_llama <PlayerUID>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_llama <PlayerUID>\n" );
 			return true;
 		}
 
@@ -709,21 +709,21 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		CBasePlayer *Player = GetPlayerByUID( UID );
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID!\n" );
 			return true;
 		}
 
 		Player->m_IsLlama = TRUE;
 
 		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s is now a llama! Bleeet!\n", STRING( Player->pev->netname ) ) );
-		PrintClientMsg( pPlayer, "%s is now a llama! Bleeet!\n", STRING( Player->pev->netname ) );
+		PrintClientMsg( pPlayer, "BubbleMod-X Admin: %s is now a llama! Bleeet!\n", STRING( Player->pev->netname ) );
 		return true;
 	}
 	else if( FStrEq(pCmd, "admin_unllama" ) )
 	{
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_unllama <PlayerUID>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_unllama <PlayerUID>\n" );
 			return true;
 		}
 
@@ -732,14 +732,14 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		CBasePlayer *Player = GetPlayerByUID( UID );
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID!\n" );
 			return true;
 		}
 
 		Player->m_IsLlama = FALSE;
 
 		UTIL_ClientPrintAll( HUD_PRINTTALK, UTIL_VarArgs( "<SERVER> %s is unllamafied.\n", STRING( Player->pev->netname ) ) );
-		PrintClientMsg( pPlayer, "%s is unllamafied.\n", STRING( Player->pev->netname ) );
+		PrintClientMsg( pPlayer, "BubbleMod-X Admin: %s is unllamafied.\n", STRING( Player->pev->netname ) );
 		return true;
 	}
 	else if( FStrEq(pCmd, "admin_help"))
@@ -778,16 +778,17 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_kick <PlayerUID>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_kick <PlayerUID>\n" );
 			return true;
 		}
 
 		int UID = atoi( CMD_ARGV( 1 ) );
 
 		CBasePlayer *Player = GetPlayerByUID( UID );
+
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID!\n" );
 			return true;
 		}
 
@@ -798,7 +799,7 @@ bool Admin_ClientCommand( edict_t *pEntity )
 	{
 		if( CMD_ARGC() < 2 )
 		{
-			PrintClientMsg( pPlayer, "Not enough arguments.\nUSAGE: admin_ban <BanTime> <PlayerUID>\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Not enough arguments!\nUSAGE: admin_ban <BanTime> <PlayerUID>\n" );
 			return true;
 		}
 
@@ -806,9 +807,10 @@ bool Admin_ClientCommand( edict_t *pEntity )
 		int UID = atoi( CMD_ARGV( 2 ) );
 
 		CBasePlayer *Player = GetPlayerByUID( UID );
+
 		if( Player == NULL )
 		{
-			PrintClientMsg( pPlayer, "Invalid Player UID.\n" );
+			PrintClientMsg( pPlayer, "BubbleMod-X Admin: Invalid Player UID!\n" );
 			return true;
 		}
 

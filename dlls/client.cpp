@@ -1099,7 +1099,7 @@ void PlayerPreThink( edict_t *pEntity )
 	// Troll338cz
 	if (pPlayer->m_bSendHelpMsg == TRUE && pPlayer->m_bSendFirstMsg <= gpGlobals->time )
 	{
-		ClientPrint( pev, HUD_PRINTTALK, "Type 'bm_help' in the console to see available commands\n" );
+		ClientPrint( pev, HUD_PRINTTALK, "<SERVER> Type 'bm_help' in the console to see available commands\n" );
 		pPlayer->m_bSendHelpMsg = FALSE;
 	}
 	//
