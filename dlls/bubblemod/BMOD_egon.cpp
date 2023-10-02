@@ -133,6 +133,9 @@ private:
 	float				m_healAmmoUsed;
 	float				m_healAmmoUseTime;
 
+	int m_gluonmod = bm_gluon_mod.value;
+	int					m_iSwitchFireMode;
+
 	unsigned short m_usEgonFire;
 	unsigned short m_usEgonStop;
 
@@ -166,6 +169,8 @@ void CEgon::Spawn( )
 	SET_MODEL(ENT(pev), "models/w_egon.mdl");
 
 	m_iDefaultAmmo = EGON_DEFAULT_GIVE;
+
+	m_iSwitchFireMode = 0;
 
 	FallInit();// get ready to fall down.
 }
@@ -202,8 +207,17 @@ void CEgon::Precache( void )
 
 BOOL CEgon::Deploy( void )
 {
-	if (bm_gluon_mod.value) {
-		PrintMessage( m_pPlayer, BMOD_CHAN_WEAPON, Vector (20,250,20), Vector (1, 4, 2), "BUBBLE GUN\nPRIMARY FIRE: Breathe bubbles underwater.\nSECONDARY FIRE: Hold down 5 seconds for area effect healing.");
+	switch( m_gluonmod )
+	{
+		case 0:
+			break;
+		case 1:
+			PrintMessage( m_pPlayer, BMOD_CHAN_WEAPON, Vector (20,250,20), Vector (1, 4, 2), "BUBBLE GUN\nPRIMARY FIRE: Breathe bubbles underwater.\nSECONDARY FIRE: Hold down 5 seconds for area effect healing.");
+			break;
+		case 2:
+			PrintMessage( m_pPlayer, BMOD_CHAN_WEAPON, Vector (20,250,100), Vector (1, 4, 2), "SUPER EGON\nSECONDARY FIRE: Switch fire mode!");
+			break;
+
 	}
 
 	m_deployed = FALSE;
@@ -231,10 +245,18 @@ void CEgon::Holster( int skiplocal /* = 0 */ )
 	SendWeaponAnim( EGON_HOLSTER );
 
 	if ( m_fireState != FIRE_OFF ) {
-		if (bm_gluon_mod.value) 
-			EndBubbleAttack();
-		else
-			EndAttack();
+		switch( m_gluonmod )
+		{
+			case 0:
+				EndAttack();
+				break;
+			case 1:
+				EndBubbleAttack();
+				break;
+			case 2:
+				EndAttack();
+				break;
+		}
 	}
 }
 
@@ -365,23 +387,56 @@ void CEgon::BubbleAttack( void )
 
 void CEgon::PrimaryAttack( void )
 {
-	if (bm_gluon_mod.value) {
-		m_fireMode = FIRE_WIDE;
-		BubbleAttack();
-	}
-	else {
-		m_fireMode = FIRE_WIDE;
-		Attack();
+	switch( m_gluonmod )
+	{
+		case 0:
+			m_fireMode = FIRE_WIDE;
+			Attack();
+			break;
+		case 1:
+			m_fireMode = FIRE_WIDE;
+			BubbleAttack();
+			break;
+		case 2:
+			switch( m_iSwitchFireMode )
+			{
+				case 0:
+					m_fireMode = FIRE_WIDE;
+					break;
+				case 1:
+					m_fireMode = FIRE_NARROW;
+					break;
+			}
+			Attack();
+			break;
 	}
 }
 
 void CEgon::SecondaryAttack( void )
 {
-	if (bm_gluon_mod.value) {
-		m_fireMode = FIRE_NARROW;
-		BubbleAttack();
-	}
-	else {
+	switch( m_gluonmod )
+	{
+		case 0:
+			break;
+		case 1:
+			m_fireMode = FIRE_NARROW;
+			BubbleAttack();
+			break;
+		case 2:
+			m_iSwitchFireMode = (m_iSwitchFireMode + 1 ) % 2;
+			switch( m_iSwitchFireMode )
+			{
+				case 0:
+					SendWeaponAnim(EGON_FIDGET1);
+					PrintMessage( m_pPlayer, BMOD_CHAN_WEAPON, Vector (20,250,100), Vector (1, 4, 2), "SUPER EGON\nFIREMODE: Wide\nSECONDARY FIRE: Switch fire mode!");
+					break;
+				case 1:
+					SendWeaponAnim(EGON_FIDGET1);
+					PrintMessage( m_pPlayer, BMOD_CHAN_WEAPON, Vector (20,250,100), Vector (1, 4, 2), "SUPER EGON\nFIREMODE: Narrow\nSECONDARY FIRE: Switch fire mode!");
+					break;
+			}
+			m_flNextPrimaryAttack = m_flNextSecondaryAttack = gpGlobals->time + 2.0f;
+			break;
 	}
 }
 
@@ -550,7 +605,7 @@ void CEgon::UpdateEffect( const Vector &startPoint, const Vector &endPoint, floa
 	if ( m_fireMode == FIRE_WIDE )
 		m_pBeam->SetColor( 30 + (25*timeBlend), 30 + (30*timeBlend), 64 + 80*fabs(sin(gpGlobals->time*10)) );
 	else
-		m_pBeam->SetColor( 60 + (25*timeBlend), 120 + (30*timeBlend), 64 + 80*fabs(sin(gpGlobals->time*10)) );
+		m_pBeam->SetColor( 250 + (25*timeBlend), 120 + (30*timeBlend), 64 + 80*fabs(sin(gpGlobals->time*10)) );
 
 
 	UTIL_SetOrigin( m_pSprite->pev, endPoint );
@@ -593,13 +648,12 @@ void CEgon::CreateEffect( void )
 	}
 	else
 	{
-		m_pBeam->SetScrollRate( 110 );
+		m_pBeam->SetScrollRate( 200 );
 		m_pBeam->SetNoise( 5 );
-		m_pNoise->SetColor( 80, 120, 255 );
+		m_pNoise->SetColor( 255, 120, 255 );
 		m_pNoise->SetNoise( 2 );
 	}
 }
-
 
 void CEgon::DestroyEffect( void )
 {
@@ -632,10 +686,18 @@ void CEgon::WeaponIdle( void )
 		return;
 
 	if ( m_fireState != FIRE_OFF ) {
-		if (bm_gluon_mod.value) 
-			EndBubbleAttack();
-		else
-			EndAttack();
+		switch( m_gluonmod )
+		{
+			case 0:
+				EndAttack();
+				break;
+			case 1:
+				EndBubbleAttack();
+				break;
+			case 2:
+				EndAttack();
+				break;
+		}
 	}
 
 	int iAnim;
@@ -647,10 +709,13 @@ void CEgon::WeaponIdle( void )
 		iAnim = EGON_IDLE1;
 		m_flTimeWeaponIdle = gpGlobals->time + RANDOM_FLOAT(10,15);
 	}
-	else 
+	else
 	{
-		iAnim = EGON_FIDGET1;
-		m_flTimeWeaponIdle = gpGlobals->time + 3;
+		if (bm_gluon_mod.value < 2)
+		{
+			iAnim = EGON_FIDGET1;
+			m_flTimeWeaponIdle = gpGlobals->time+ 3.0f;
+		}
 	}
 
 	SendWeaponAnim( iAnim );
@@ -670,8 +735,9 @@ void CEgon::EndBubbleAttack( void )
 
 void CEgon::EndAttack( void )
 {
+	EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, BUBB_SOUND_STARTUP, 0.9, ATTN_NORM, 0, 80 );
 	STOP_SOUND( ENT(m_pPlayer->pev), CHAN_STATIC, EGON_SOUND_RUN );
-	EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, EGON_SOUND_OFF, 0.98, ATTN_NORM, 0, 100); 
+	EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, EGON_SOUND_OFF, 0.98, ATTN_NORM, 0, 100);
 	m_fireState = FIRE_OFF;
 	m_flTimeWeaponIdle = gpGlobals->time + 2.0f;
 	m_flNextPrimaryAttack = gpGlobals->time + 0.5f;
@@ -735,7 +801,7 @@ void CEgon::Attack( void )
 			}
 			else
 			{
-				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, EGON_SOUND_STARTUP, 0.9, ATTN_NORM, 0, 80 );
+				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_WEAPON, EGON_SOUND_STARTUP, 0.70, ATTN_NORM, 0, 80 );
 			}
 
 			pev->dmgtime = gpGlobals->time + GetPulseInterval();
@@ -751,7 +817,14 @@ void CEgon::Attack( void )
 
 			if ( m_shootTime != 0 && gpGlobals->time > m_shootTime )
 			{
-				EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_STATIC, EGON_SOUND_RUN, 0.98, ATTN_NORM, 0, 125 );
+				if ( m_fireMode == FIRE_WIDE )
+				{
+					EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_STATIC, EGON_SOUND_RUN, 0.98, ATTN_NORM, 0, 125 );
+				}
+				else
+				{
+					EMIT_SOUND_DYN(ENT(m_pPlayer->pev), CHAN_STATIC, EGON_SOUND_RUN, 0.70, ATTN_NORM, 0, 80 );
+				}
 				m_shootTime = 0;
 			}			
 
